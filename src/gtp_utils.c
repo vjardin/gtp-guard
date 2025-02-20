@@ -219,6 +219,34 @@ const gtp_msg_type_map_t gtpc_msg_type2str[0xff] = {
 	/* any non listed records: 0 initialiazed */
 };
 
+const gtp_msg_type_map_t gtpu_msg_type2str[256] = {
+	[GTPU_ECHO_REQ_TYPE] = {
+		.name = "GTPU_ECHO_REQ_TYPE",
+		.description = "Used to verify path connectivity in GTP-U (Echo Request)."
+	},
+	[GTPU_ECHO_RSP_TYPE] = {
+		.name = "GTPU_ECHO_RSP_TYPE",
+		.description = "Response confirming path connectivity (Echo Response)."
+	},
+	[GTPU_ERR_IND_TYPE] = {
+		.name = "GTPU_ERR_IND_TYPE",
+		.description = "Indicates an error in the user-plane path (e.g., TEID mismatch)."
+	},
+	[GTPU_SUPP_EXTHDR_NOTI_TYPE] = {
+		.name = "GTPU_SUPP_EXTHDR_NOTI_TYPE",
+		.description = "Notification that the GTP-U entity supports extension headers."
+	},
+	[GTPU_END_MARKER_TYPE] = {
+		.name = "GTPU_END_MARKER_TYPE",
+		.description = "Marks the end of data forwarding during a handover procedure."
+	},
+	[GTPU_GPDU_TYPE] = {
+		.name = "GTPU_GPDU_TYPE",
+		.description = "The G-PDU (payload) message that carries user data over GTP-U."
+	},
+	/* any non listed records: 0 initialiazed */
+};
+
 size_t
 gtp1_get_header_len(gtp1_hdr_t *h)
 {

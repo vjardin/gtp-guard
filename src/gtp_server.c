@@ -184,7 +184,7 @@ gtp_server_worker_alloc(gtp_server_t *srv, int id)
 {
 	gtp_server_worker_t *worker;
 
-	PMALLOC(worker);
+	PCALLOC(worker);
 	INIT_LIST_HEAD(&worker->next);
 	worker->srv = srv;
 	worker->id = id;

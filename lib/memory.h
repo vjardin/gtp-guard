@@ -68,6 +68,7 @@ extern void memory_free_final(char *);
 
 /* Common defines */
 #define PMALLOC(p)	{ p = MALLOC(sizeof(*p)); }
+#define PCALLOC(p)	{ p = CALLOC(sizeof(*p), 1); }
 #define FREE_PTR(p)     { if (p) { FREE(p);} }
 #define FREE_CONST_PTR(p) { if (p) { FREE_CONST(p);} }
 

@@ -237,11 +237,17 @@ _gtp_server_for_each_worker(gtp_server_t *srv, int (*cb) (gtp_server_worker_t *,
 	return 0;
 }
 
+struct vty_server_work_arg {
+	vty_t *vty;
+	const gtp_msg_type_map_t *msg_type2str;
+};
+
 static int
 vty_server_worker(gtp_server_worker_t *w, void *arg)
 {
 	char flags2str[BUFSIZ];
-	vty_t *vty =(vty_t *)arg;
+	vty_t *vty = ((struct vty_server_work_arg *)arg)->vty;
+	const gtp_msg_type_map_t *msg_type2str = ((struct vty_server_work_arg *)arg)->msg_type2str;
 	char fdpath[PATH_MAX];
 
 	vty_out(vty, "   %s worker %d task 0x%lx fd %d (%s)%s"
@@ -262,11 +268,31 @@ vty_server_worker(gtp_server_worker_t *w, void *arg)
 		   , w->tx_bytes, w->tx_pkt
 		   , VTY_NEWLINE);
 
+	for (int i = 0; i < ARRAY_SIZE(w->msg_stats); i++) {
+		if (w->msg_stats[i].gmsg_type != 0)
+			vty_out(vty, "     %s(%d): %d%s"
+				   , msg_type2str
+				       ? msg_type2str[i].name
+				       : "null"
+				   , i
+				   , w->msg_stats[i].gmsg_type
+				   , VTY_NEWLINE);
+		if (w->msg_stats[i].gmsg_unsupported != 0)
+			vty_out(vty, "     %s(%d): %d (not supported)%s"
+				   , msg_type2str
+				       ? msg_type2str[i].name ? msg_type2str[i].name : "bad type"
+				       : "null"
+				   , i
+				   , w->msg_stats[i].gmsg_unsupported
+				   , VTY_NEWLINE);
+		/* TODO add cause */
+	}
+
 	return CMD_SUCCESS;
 }
 
 static int
-vty_server(vty_t *vty, gtp_server_t *srv, const char *gtplane)
+vty_server(vty_t *vty, gtp_server_t *srv, const char *gtplane, const gtp_msg_type_map_t *msg_type2str)
 {
 	char flags2str[BUFSIZ];
 
@@ -279,7 +305,11 @@ vty_server(vty_t *vty, gtp_server_t *srv, const char *gtplane)
 		   , VTY_NEWLINE
 		   , srv->flags, gtp_flags2str(flags2str, sizeof(flags2str), srv->flags)
 		   , VTY_NEWLINE);
-	_gtp_server_for_each_worker(srv, vty_server_worker, vty);
+	struct vty_server_work_arg arg = {
+		.vty = vty,
+		.msg_type2str = msg_type2str,
+	};
+	_gtp_server_for_each_worker(srv, vty_server_worker, &arg);
 
 	return CMD_SUCCESS;
 }
@@ -321,7 +351,7 @@ DEFUN(show_workers_gtp_router,
 		    (strcmp(plane, "gtpc") == 0)) {
 			gtp_server_t *srv = &ctx->gtpc;
 			if (__test_bit(GTP_FL_CTL_BIT, &srv->flags))
-				vty_server(vty, srv, "gtpc");
+				vty_server(vty, srv, "gtpc", gtpc_msg_type2str);
 			else
 				vty_out(vty, "  gtpc: none%s"
 					   , VTY_NEWLINE);
@@ -331,7 +361,7 @@ DEFUN(show_workers_gtp_router,
 		    (strcmp(plane, "gtpu") == 0)) {
 			gtp_server_t *srv = &ctx->gtpu;
 			if (__test_bit(GTP_FL_UPF_BIT, &srv->flags))
-				vty_server(vty, srv, "gtpu");
+				vty_server(vty, srv, "gtpu", NULL);
 			else
 				vty_out(vty, "  gtpu: none%s"
 					   , VTY_NEWLINE);

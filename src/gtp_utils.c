@@ -71,6 +71,154 @@ static const struct {
 	[127]	=	{4},
 };
 
+const gtp_msg_type_map_t gtpc_msg_type2str[0xff] = {
+	[GTP_ECHO_REQUEST_TYPE] = {
+		.name = "GTP_ECHO_REQUEST_TYPE",
+		.description = "Used to check GTP control-plane connectivity between two nodes."
+	},
+	[GTP_ECHO_RESPONSE_TYPE] = {
+		 .name = "GTP_ECHO_RESPONSE_TYPE",
+		 .description = "Response confirming connectivity to a GTP Echo Request."
+	},
+	[GTP_VERSION_NOT_SUPPORTED_INDICATION_TYPE] = {
+		 .name = "GTP_VERSION_NOT_SUPPORTED_INDICATION_TYPE",
+		 .description = "Indicates that the requested GTP version is not supported."
+	},
+	[GTP_CREATE_PDP_CONTEXT_REQUEST] = {
+		.name = "GTP_CREATE_PDP_CONTEXT_REQUEST",
+		.description = "Requests the creation of a PDP context for a subscriber session."
+	},
+	[GTP_CREATE_PDP_CONTEXT_RESPONSE] = {
+		.name = "GTP_CREATE_PDP_CONTEXT_RESPONSE",
+		.description = "Returns acceptance or rejection of a Create PDP Context Request."
+	},
+	[GTP_UPDATE_PDP_CONTEXT_REQUEST] = {
+		.name = "GTP_UPDATE_PDP_CONTEXT_REQUEST",
+		.description = "Requests modification of an existing PDP context."
+	},
+	[GTP_UPDATE_PDP_CONTEXT_RESPONSE] = {
+		.name = "GTP_UPDATE_PDP_CONTEXT_RESPONSE",
+		.description = "Returns acceptance or rejection of an Update PDP Context Request."
+	},
+	[GTP_DELETE_PDP_CONTEXT_REQUEST] = {
+		.name = "GTP_DELETE_PDP_CONTEXT_REQUEST",
+		.description = "Requests deletion of an existing PDP context."
+	},
+	[GTP_DELETE_PDP_CONTEXT_RESPONSE] = {
+		.name = "GTP_DELETE_PDP_CONTEXT_RESPONSE",
+		.description = "Returns acceptance or rejection of a Delete PDP Context Request."
+	},
+	[GTP_CREATE_SESSION_REQUEST_TYPE] = {
+		.name = "GTP_CREATE_SESSION_REQUEST_TYPE",
+		.description = "Requests establishment of a new session (bearer) in GTPv2."
+	},
+	[GTP_CREATE_SESSION_RESPONSE_TYPE] = {
+		.name = "GTP_CREATE_SESSION_RESPONSE_TYPE",
+		.description = "Returns acceptance or rejection of a Create Session Request."
+	},
+	[GTP_MODIFY_BEARER_REQUEST_TYPE] = {
+		.name = "GTP_MODIFY_BEARER_REQUEST_TYPE",
+		.description = "Requests modification of parameters for an existing bearer."
+	},
+	[GTP_MODIFY_BEARER_RESPONSE_TYPE] = {
+		.name = "GTP_MODIFY_BEARER_RESPONSE_TYPE",
+		.description = "Returns acceptance or rejection of a Modify Bearer Request."
+	},
+	[GTP_DELETE_SESSION_REQUEST_TYPE] = {
+		.name = "GTP_DELETE_SESSION_REQUEST_TYPE",
+		.description = "Requests deletion of a session (bearer)."
+	},
+	[GTP_DELETE_SESSION_RESPONSE_TYPE] = {
+		.name = "GTP_DELETE_SESSION_RESPONSE_TYPE",
+		.description = "Returns acceptance or rejection of a Delete Session Request."
+	},
+	[GTP_CHANGE_NOTIFICATION_REQUEST] = {
+		.name = "GTP_CHANGE_NOTIFICATION_REQUEST",
+		.description = "Requests a notification regarding changes in user-plane parameters."
+	},
+	[GTP_CHANGE_NOTIFICATION_RESPONSE] = {
+		.name = "GTP_CHANGE_NOTIFICATION_RESPONSE",
+		.description = "Returns acceptance or rejection of a Change Notification Request."
+	},
+	[GTP_REMOTE_UE_REPORT_NOTIFICATION] = {
+		.name = "GTP_REMOTE_UE_REPORT_NOTIFICATION",
+		.description = "Notifies about remote UE events or connectivity changes."
+	},
+	[GTP_RESUME_NOTIFICATION] = {
+		.name = "GTP_RESUME_NOTIFICATION",
+		.description = "Indicates the resumption of suspended data forwarding or session."
+	},
+	[GTP_RESUME_ACK] = {
+		.name = "GTP_RESUME_ACK",
+		.description = "Acknowledges receipt of a GTP Resume Notification."
+	},
+	[GTP_MODIFY_BEARER_COMMAND] = {
+		.name = "GTP_MODIFY_BEARER_COMMAND",
+		.description = "Instructs modification of a bearer with new parameters."
+	},
+	[GTP_MODIFY_BEARER_FAILURE_IND] = {
+		.name = "GTP_MODIFY_BEARER_FAILURE_IND",
+		.description = "Indicates a failure in processing a Modify Bearer Command."
+	},
+	[GTP_DELETE_BEARER_COMMAND] = {
+		.name = "GTP_DELETE_BEARER_COMMAND",
+		.description = "Requests the deletion of a specific bearer."
+	},
+	[GTP_DELETE_BEARER_FAILURE_IND] = {
+		.name = "GTP_DELETE_BEARER_FAILURE_IND",
+		.description = "Indicates a failure in processing a Delete Bearer Command."
+	},
+	[GTP_BEARER_RESSOURCE_COMMAND] = {
+		.name = "GTP_BEARER_RESSOURCE_COMMAND",
+		.description = "Instructs resource allocation or modification for a bearer."
+	},
+	[GTP_BEARER_RESSOURCE_FAILURE_IND] = {
+		.name = "GTP_BEARER_RESSOURCE_FAILURE_IND",
+		.description = "Indicates failure in a bearer resource procedure."
+	},
+	[GTP_CREATE_BEARER_REQUEST] = {
+		.name = "GTP_CREATE_BEARER_REQUEST",
+		.description = "Requests creation of one or more dedicated bearers."
+	},
+	[GTP_CREATE_BEARER_RESPONSE] = {
+		.name = "GTP_CREATE_BEARER_RESPONSE",
+		.description = "Returns acceptance or rejection of a Create Bearer Request."
+	},
+	[GTP_UPDATE_BEARER_REQUEST] = {
+		.name = "GTP_UPDATE_BEARER_REQUEST",
+		.description = "Requests modification of one or more existing bearers."
+	},
+	[GTP_UPDATE_BEARER_RESPONSE] = {
+		.name = "GTP_UPDATE_BEARER_RESPONSE",
+		.description = "Returns acceptance or rejection of an Update Bearer Request."
+	},
+	[GTP_DELETE_BEARER_REQUEST] = {
+		.name = "GTP_DELETE_BEARER_REQUEST",
+		.description = "Requests deletion of one or more bearers."
+	},
+	[GTP_DELETE_BEARER_RESPONSE] = {
+		.name = "GTP_DELETE_BEARER_RESPONSE",
+		.description = "Returns acceptance or rejection of a Delete Bearer Request."
+	},
+	[GTP_DELETE_PDN_CONNECTION_SET_REQUEST] = {
+		.name = "GTP_DELETE_PDN_CONNECTION_SET_REQUEST",
+		.description = "Requests deletion of PDN connections associated with a user."
+	},
+	[GTP_SUSPEND_NOTIFICATION] = {
+		.name = "GTP_SUSPEND_NOTIFICATION",
+		.description = "Indicates the suspension of a PDN connection or bearer."
+	},
+	[GTP_UPDATE_PDN_CONNECTION_SET_REQUEST] = {
+		.name = "GTP_UPDATE_PDN_CONNECTION_SET_REQUEST",
+		.description = "Requests updating PDN connections associated with a user."
+	},
+	[GTP_UPDATE_PDN_CONNECTION_SET_RESPONSE] = {
+		.name = "GTP_UPDATE_PDN_CONNECTION_SET_RESPONSE",
+		.description = "Returns acceptance or rejection of an Update PDN Connection Set Request."
+	},
+	/* any non listed records: 0 initialiazed */
+};
+
 size_t
 gtp1_get_header_len(gtp1_hdr_t *h)
 {

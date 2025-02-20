@@ -22,6 +22,12 @@
 #ifndef _GTP_SERVER_H
 #define _GTP_SERVER_H
 
+typedef struct _gtp_server_msg_stats {
+	uint32_t		gmsg_type; /* count GTP-u/c Message Type */
+	uint32_t		gmsg_cause; /* GTP msg cause */
+	uint32_t		gmsg_unsupported; /* no processing handler */
+} gtp_server_msg_stats_t;
+
 /* GTP Switching context */
 typedef struct _gtp_server_worker {
 	char			pname[GTP_PNAME];
@@ -37,6 +43,7 @@ typedef struct _gtp_server_worker {
 	uint64_t		tx_bytes;
 	uint64_t		rx_pkt;
 	uint64_t		tx_pkt;
+	gtp_server_msg_stats_t	msg_stats[0xff]; /* stats of GTP-u/c Message Type */
 
 	list_head_t		next;
 

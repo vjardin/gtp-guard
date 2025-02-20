@@ -361,7 +361,7 @@ DEFUN(show_workers_gtp_router,
 		    (strcmp(plane, "gtpu") == 0)) {
 			gtp_server_t *srv = &ctx->gtpu;
 			if (__test_bit(GTP_FL_UPF_BIT, &srv->flags))
-				vty_server(vty, srv, "gtpu", NULL);
+				vty_server(vty, srv, "gtpu", gtpu_msg_type2str);
 			else
 				vty_out(vty, "  gtpu: none%s"
 					   , VTY_NEWLINE);

@@ -1281,10 +1281,13 @@ gtpc_router_handle(gtp_server_worker_t *w, struct sockaddr_storage *addr)
 {
 	gtp_hdr_t *gtph = (gtp_hdr_t *) w->pbuff->head;
 
-	if (*(gtpc_msg_hdl[gtph->type].hdl))
+	if (*(gtpc_msg_hdl[gtph->type].hdl)) {
+		w->msg_stats[gtph->type].gmsg_type++;
 		return (*(gtpc_msg_hdl[gtph->type].hdl)) (w, addr);
+	}
 
 	/* In router mode, silently ignore message we do not support */
+	w->msg_stats[gtph->type].gmsg_unsupported++;
 	return -1;
 }
 

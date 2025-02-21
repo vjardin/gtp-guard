@@ -885,6 +885,9 @@ gtpc_echo_request_hdl(gtp_server_worker_t *w, struct sockaddr_storage *addr)
 
 	h->type = GTP_ECHO_RESPONSE_TYPE;
 
+	/* it does not use gtpc_build_header(), so count from here */
+	w->msg_stats[h->type].gmsg_type++;
+
 	return 0;
 }
 

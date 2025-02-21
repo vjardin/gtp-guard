@@ -1314,6 +1314,8 @@ gtpu_echo_request_hdl(gtp_server_worker_t *w, struct sockaddr_storage *addr)
 	pkt_buffer_set_end_pointer(w->pbuff, gtp1_get_header_len(h));
 	pkt_buffer_set_data_pointer(w->pbuff, gtp1_get_header_len(h));
 
+	w->msg_stats[h->type].gmsg_type++;
+
 	gtp1_ie_add_tail(w->pbuff, sizeof(gtp1_ie_recovery_t));
 	rec = (gtp1_ie_recovery_t *) w->pbuff->data;
 	rec->type = GTP1_IE_RECOVERY_TYPE;
@@ -1353,13 +1355,16 @@ gtpu_router_handle(gtp_server_worker_t *w, struct sockaddr_storage *addr)
 	if (len < 0)
 		return -1;
 
-	if (*(gtpu_msg_hdl[gtph->type].hdl))
+	if (*(gtpu_msg_hdl[gtph->type].hdl)) {
+		w->msg_stats[gtph->type].gmsg_type++;
 		return (*(gtpu_msg_hdl[gtph->type].hdl)) (w, addr);
+	}
 
 	/* Not supported */
 	log_message(LOG_INFO, "%s(): GTP-U/path-mgt msg_type:0x%.2x from %s not supported..."
 			    , __FUNCTION__
 			    , gtph->type
 			    , inet_sockaddrtos(addr));
+	w->msg_stats[gtph->type].gmsg_unsupported++;
 	return -1;
 }

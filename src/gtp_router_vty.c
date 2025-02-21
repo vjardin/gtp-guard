@@ -285,7 +285,12 @@ vty_server_worker(gtp_server_worker_t *w, void *arg)
 				   , i
 				   , w->msg_stats[i].gmsg_unsupported
 				   , VTY_NEWLINE);
-		/* TODO add cause */
+		if (w->msg_stats[i].gmsg_cause != 0)
+			vty_out(vty, "     %s(%d): %d%s"
+				   , gtpc_msg_cause2str[i].name ? gtpc_msg_cause2str[i].name : "bad cause"
+				   , i
+				   , w->msg_stats[i].gmsg_cause
+				   , VTY_NEWLINE);
 	}
 
 	return CMD_SUCCESS;

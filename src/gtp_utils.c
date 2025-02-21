@@ -247,6 +247,70 @@ const gtp_msg_type_map_t gtpu_msg_type2str[256] = {
 	/* any non listed records: 0 initialiazed */
 };
 
+const gtp_msg_type_map_t gtpc_msg_cause2str[0xff] = {
+	[GTP_CAUSE_REQUEST_ACCEPTED] = {
+		.name = "GTP_CAUSE_REQUEST_ACCEPTED",
+		.description = "Cause: request accepted by the receiving node."
+	},
+	[GTP_CAUSE_CONTEXT_NOT_FOUND] = {
+		.name = "GTP_CAUSE_CONTEXT_NOT_FOUND",
+		.description = "Cause: session or context not found for the request."
+	},
+	[GTP_CAUSE_MISSING_OR_UNKNOWN_APN] = {
+		.name = "GTP_CAUSE_MISSING_OR_UNKNOWN_APN",
+		.description = "Cause: the APN is missing or not recognized by the network."
+	},
+	[GTP_CAUSE_ALL_DYNAMIC_ADDRESS_OCCUPIED] = {
+		.name = "GTP_CAUSE_ALL_DYNAMIC_ADDRESS_OCCUPIED",
+		.description = "Cause: no free IP addresses left to assign (all in use)."
+	},
+	[GTP_CAUSE_USER_AUTH_FAILED] = {
+		.name = "GTP_CAUSE_USER_AUTH_FAILED",
+		.description = "Cause: user authentication procedure failed."
+	},
+	[GTP_CAUSE_APN_ACCESS_DENIED] = {
+		.name = "GTP_CAUSE_APN_ACCESS_DENIED",
+		.description = "Cause: access to the requested APN is denied."
+	},
+	[GTP_CAUSE_REQUEST_REJECTED] = {
+		.name = "GTP_CAUSE_REQUEST_REJECTED",
+		.description = "Cause: the request was rejected (general failure)."
+	},
+	[GTP_CAUSE_IMSI_IMEI_NOT_KNOWN] = {
+		.name = "GTP_CAUSE_IMSI_IMEI_NOT_KNOWN",
+		.description = "Cause: the IMSI or IMEI is not recognized by the network."
+	},
+	[GTP_CAUSE_INVALID_PEER] = {
+		.name = "GTP_CAUSE_INVALID_PEER",
+		.description = "Cause: the peer node is invalid or not allowed."
+	},
+	[GTP_CAUSE_APN_CONGESTION] = {
+		.name = "GTP_CAUSE_APN_CONGESTION",
+		.description = "Cause: the APN is congested."
+	},
+	[GTP_CAUSE_MULTIPLE_PDN_NOT_ALLOWED] = {
+		.name = "GTP_CAUSE_MULTIPLE_PDN_NOT_ALLOWED",
+		.description = "Cause: subscriber restricted to a single PDN connection."
+	},
+	[GTP_CAUSE_TIMED_OUT_REQUEST] = {
+		.name = "GTP_CAUSE_TIMED_OUT_REQUEST",
+		.description = "Cause: no response before the request timed out."
+	},
+	[GTP_CAUSE_5GC_NOT_ALLOWED] = {
+		.name = "GTP_CAUSE_5GC_NOT_ALLOWED",
+		.description = "Cause: requested 5G Core functionality not allowed."
+	},
+	[GTP1_CAUSE_REQUEST_ACCEPTED] = {
+		.name = "GTP1_CAUSE_REQUEST_ACCEPTED",
+		.description = "Cause (GTPv1): request accepted by the receiving node."
+	},
+	[GTP1_CAUSE_NON_EXISTENT] = {
+		.name = "GTP1_CAUSE_NON_EXISTENT",
+		.description = "Cause (GTPv1): requested resource or context doesn't exist."
+	},
+	/* any non listed records: 0 initialiazed */
+};
+
 size_t
 gtp1_get_header_len(gtp1_hdr_t *h)
 {

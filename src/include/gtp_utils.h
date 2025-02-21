@@ -69,5 +69,6 @@ extern char * gtp_flags2str(char *str, size_t str_len, unsigned long flags);
 
 extern const gtp_msg_type_map_t gtpc_msg_type2str[0xff];
 extern const gtp_msg_type_map_t gtpu_msg_type2str[256];
+extern const gtp_msg_type_map_t gtpc_msg_cause2str[0xff];
 
 #endif

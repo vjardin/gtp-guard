@@ -52,6 +52,7 @@ gtp_teid_unuse_destroy(void)
 		FREE(t);
 	}
 	INIT_LIST_HEAD(&gtp_teid_unuse);
+	gtp_teid_unuse_count = 0;
 	pthread_mutex_unlock(&gtp_teid_unuse_mutex);
 
 	return 0;
@@ -479,6 +480,7 @@ int
 gtp_teid_init(void)
 {
 	INIT_LIST_HEAD(&gtp_teid_unuse);
+	gtp_teid_unuse_count = 0;
 
 	/* Init hashtab */
 	gtp_htab_init(&gtpc_teid_tab, CONN_HASHTAB_SIZE);
@@ -492,5 +494,115 @@ gtp_teid_destroy(void)
 	gtp_htab_destroy(&gtpc_teid_tab);
 	gtp_htab_destroy(&gtpu_teid_tab);
 	gtp_teid_unuse_destroy();
+	return 0;
+}
+
+static int
+vty_teid_one(vty_t *vty, const char *tab, const gtp_teid_t *t, uint32_t i, uint32_t teid_count)
+{
+	char flags2str[BUFSIZ];
+
+	vty_out(vty, " %sver:%d type:%s(0x%x) id:%d vid:%d %u.%u.%u.%u bearer:%d family:0x%x sgw:%s:%d pgw:%s:%d [h0x%x]%s"
+		     " %s sqn:0x%08x vsqn:0x%08x action:%d refcnt:0x%x count:%d%s"
+		     " %s flags:0x%lx (%s)%s"
+		   , tab
+		   , t->version
+		   , t->type == GTP_TEID_C
+		     ? "gtpc"
+		     : t->type == GTP_TEID_U
+		       ? "gtpu"
+		       : "unknown"
+		   , t->type
+		   , t->id
+		   , t->vid
+		   , NIPQUAD(t->ipv4)
+		   , t->bearer_id
+		   , t->family /* TODO: str GTP_INIT, GTP_TRIG */
+		   , inet_sockaddrtos((struct sockaddr_storage *)&t->sgw_addr), inet_sockaddrport((struct sockaddr_storage *)&t->sgw_addr)
+		   , inet_sockaddrtos((struct sockaddr_storage *)&t->pgw_addr), inet_sockaddrport((struct sockaddr_storage *)&t->pgw_addr)
+		   , i
+		   , VTY_NEWLINE
+		   , tab
+		   , t->sqn
+		   , t->vsqn
+		   , t->action
+		   , t->refcnt
+		   , teid_count
+		   , VTY_NEWLINE
+		   , tab
+		   , t->flags, gtp_flags2str(flags2str, sizeof(flags2str), t->flags)
+		   , VTY_NEWLINE);
+
+	return CMD_SUCCESS;
+}
+
+static int
+vty_teid(vty_t *vty, const gtp_htab_t *h)
+{
+	uint32_t teid_count = 0;
+
+	for (uint32_t i = 0; i < CONN_HASHTAB_SIZE; i++) {
+		dlock_lock_idd(h->dlock, i);
+		struct hlist_head *head = h->htab + (i & CONN_HASHTAB_MASK);
+		struct hlist_node *n;
+		gtp_teid_t *t;
+
+		hlist_for_each_entry(t, n, head, hlist_vteid) {
+			vty_teid_one(vty, "", t, i, teid_count);
+
+			if (t->peer_teid)
+				vty_teid_one(vty, " P", t->peer_teid, i, teid_count);
+			else
+				vty_out(vty, " no peer%s", VTY_NEWLINE);
+#if 0
+
+			if (t->old_teid)
+				vty_teid_one(vty, " O", t->old_teid, i, teid_count);
+			else
+				vty_out(vty, " no old peer%s", VTY_NEWLINE);
+#endif
+
+			teid_count++;
+		}
+		dlock_unlock_idd(h->dlock, i);
+	}
+
+	if (teid_count == 0)
+		vty_out(vty, " none%s", VTY_NEWLINE);
+
+	return CMD_SUCCESS;
+}
+
+/* show handlers */
+DEFUN(show_teid,
+      show_teid_cmd,
+      "show teid",
+      SHOW_STR
+      "Tunnel Endpoing IDentifier list\n")
+{
+	vty_out(vty, "TEID unuse_count:%'d hsize:%'d%s"
+		   , gtp_teid_unuse_count
+		   , CONN_HASHTAB_SIZE
+		   , VTY_NEWLINE);
+
+	vty_out(vty, "GTPc Tunnel Endpoint IDentifiers%s"
+		   , VTY_NEWLINE);
+	vty_teid(vty, &gtpc_teid_tab);
+
+	vty_out(vty, "GTPu Tunnel Endpoint IDentifiers%s"
+		   , VTY_NEWLINE);
+	vty_teid(vty, &gtpu_teid_tab);
+
+	return CMD_SUCCESS;
+}
+
+/*
+ *	VTY init
+ */
+int
+gtp_teid_vty_init(void)
+{
+	install_element(ENABLE_NODE, &show_teid_cmd);
+
 	return 0;
 }

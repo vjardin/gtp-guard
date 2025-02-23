@@ -41,6 +41,8 @@ typedef struct _gtp_htab {
 /* Prototypes */
 extern int dlock_lock_id(dlock_mutex_t *, uint32_t, uint32_t);
 extern int dlock_unlock_id(dlock_mutex_t *, uint32_t, uint32_t);
+extern int dlock_lock_idd(dlock_mutex_t *, uint32_t);
+extern int dlock_unlock_idd(dlock_mutex_t *, uint32_t);
 extern dlock_mutex_t *dlock_init(void);
 extern int dlock_destroy(dlock_mutex_t *);
 extern void gtp_htab_init(gtp_htab_t *, size_t);

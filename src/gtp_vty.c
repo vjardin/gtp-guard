@@ -944,6 +944,7 @@ gtp_vty_init(void)
         gtp_switch_vty_init();
         gtp_router_vty_init();
         gtp_sessions_vty_init();
+        gtp_teid_vty_init();
 
 	return 0;
 }

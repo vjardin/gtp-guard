@@ -116,4 +116,6 @@ extern int gtp_vteid_alloc(gtp_htab_t *, gtp_teid_t *, unsigned int *);
 extern int gtp_vteid_unhash(gtp_htab_t *, gtp_teid_t *);
 extern gtp_teid_t *gtp_vteid_get(gtp_htab_t *, uint32_t);
 
+extern int gtp_teid_vty_init(void);
+
 #endif

@@ -58,6 +58,25 @@ dlock_unlock_id(dlock_mutex_t *__array, uint32_t w1, uint32_t w2)
 		pthread_mutex_unlock(&m->mutex);
 	return 0;
 }
+/* lock id direct wihtout hash */
+int
+dlock_lock_idd(dlock_mutex_t *__array, uint32_t i)
+{
+	dlock_mutex_t *m = __array + (i & DLOCK_HASHTAB_MASK);
+	pthread_mutex_lock(&m->mutex);
+	__sync_add_and_fetch(&m->refcnt, 1);
+	return 0;
+}
+
+/* unlock id direct wihtout hash */
+int
+dlock_unlock_idd(dlock_mutex_t *__array, uint32_t i)
+{
+	dlock_mutex_t *m = __array + (i & DLOCK_HASHTAB_MASK);
+	if (__sync_sub_and_fetch(&m->refcnt, 1) == 0)
+		pthread_mutex_unlock(&m->mutex);
+	return 0;
+}
 
 dlock_mutex_t *
 dlock_init(void)

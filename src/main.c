@@ -26,6 +26,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <libbpf.h>
+#include <locale.h>
 
 /* local includes */
 #include "gtp_guard.h"
@@ -235,6 +236,8 @@ int
 main(int argc, char **argv)
 {
 	struct rlimit limit;
+
+	setlocale(LC_NUMERIC, "C"); /* default is no comma, no space-separated thousands */
 
 	/* Init debugging level */
 	mem_allocated = 0;
